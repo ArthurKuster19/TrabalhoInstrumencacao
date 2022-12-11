@@ -16,12 +16,15 @@ namespace Trab2Supervisorios
     {
 
         private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        int contadortotal;
-        int contadortotalopac;
-        int contadortotalotransp;
+        public int contadortotal;
+        public int contadortotalopac;
+        public int contadortotalotransp;
+        public int contadorparcialopac;
+        public int contadorparcialtransp;
         public Form2()
         {
             InitializeComponent();
+            
 
         }
 
@@ -29,11 +32,14 @@ namespace Trab2Supervisorios
         {
             
         }
-        public void ProcessaPeça()
+        public void ProcessaPeça(int entrada, int tipo)
         {
             int[] separator = new int [1];
             int[] contadorTipo = new int [1];
             int[] contadorQtd = new int [1];
+
+            separator[0] = entrada;
+            separator[1] = tipo;
            
             
 
@@ -42,8 +48,9 @@ namespace Trab2Supervisorios
                 log.Info("PEÇA OPACA");
                 richTextBox1.Text = richTextBox1.Text + "\n" + ">>PEÇA OPACA";
                 contadorTipo [0] = contadorTipo[0] + 1;
+                contadorparcialopac = contadorTipo[0];
                 contadortotalopac = contadorTipo[0];
-                textBox1.Text = contadorTipo[0].ToString();
+                textBox1.Text = contadorparcialopac.ToString();
                 textBox3.Text = contadortotalopac.ToString();
 
             }
@@ -52,8 +59,9 @@ namespace Trab2Supervisorios
                 log.Info("PEÇA TRANSPARENTE");
                 richTextBox1.Text = richTextBox1.Text + "\n" + ">>PEÇA TRANSPARENTE";
                 contadorTipo[1] = contadorTipo[1] + 1;
+                contadorparcialtransp = contadorTipo[1];
                 contadortotalotransp = contadorTipo[1];
-                textBox2.Text = contadorTipo [1].ToString();
+                textBox2.Text = contadorparcialtransp.ToString();
                 textBox4.Text = contadortotalotransp.ToString();
 
             }
@@ -118,16 +126,14 @@ namespace Trab2Supervisorios
 
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
+        private void button2_Click_1(object sender, EventArgs e )
         {
             log.Info("CONTADOR PARCIAL LIMPO");
             richTextBox1.Text = richTextBox1.Text + "\n" + ">>CONTADOR PARCIAL LIMPO";
-
-            textBox1.Text = "0";
-            textBox2.Text = "0";
-
-            //textBox1.Text = contadorTipo[0].ToString();
-            //textBox1.Text = contadorTipo[0].ToString();
+            contadorparcialtransp = 0;
+            contadorparcialopac = 0;
+            textBox1.Text = contadorparcialopac.ToString();
+            textBox2.Text = contadorparcialtransp.ToString();
         }
 
         private void button1_Click_2(object sender, EventArgs e)
@@ -138,6 +144,18 @@ namespace Trab2Supervisorios
         }
 
         private void button3_Click_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            //int existe = int.Parse(textBox6.Text) ;
+         
+            //ProcessaPeça();
+        }
+
+        private void textBox5_TextChanged(object sender, EventArgs e)
         {
 
         }

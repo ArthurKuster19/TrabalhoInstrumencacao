@@ -24,7 +24,7 @@ namespace Trab2Supervisorios
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            progressBar1.Value = progressBar1.Value + 2;
+            progressBar1.Value = progressBar1.Value + 1;
             if (progressBar1.Value >= 99)
             {
                 timer1.Enabled = false;

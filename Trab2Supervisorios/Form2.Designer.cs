@@ -49,6 +49,7 @@
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
+            this.button4 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -100,7 +101,7 @@
             this.button1.BackColor = System.Drawing.Color.IndianRed;
             this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button1.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button1.Location = new System.Drawing.Point(1068, 106);
+            this.button1.Location = new System.Drawing.Point(1068, 223);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(160, 88);
             this.button1.TabIndex = 3;
@@ -113,7 +114,7 @@
             this.button2.BackColor = System.Drawing.Color.LightSeaGreen;
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.ForeColor = System.Drawing.SystemColors.ButtonFace;
-            this.button2.Location = new System.Drawing.Point(1068, 12);
+            this.button2.Location = new System.Drawing.Point(1068, 129);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(160, 88);
             this.button2.TabIndex = 4;
@@ -199,7 +200,7 @@
             // 
             // button3
             // 
-            this.button3.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.button3.BackColor = System.Drawing.Color.DarkKhaki;
             this.button3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button3.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.button3.Location = new System.Drawing.Point(1068, 317);
@@ -250,11 +251,25 @@
             this.label5.Text = "Peças ";
             this.label5.Click += new System.EventHandler(this.label5_Click_1);
             // 
+            // button4
+            // 
+            this.button4.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.button4.ForeColor = System.Drawing.SystemColors.ButtonFace;
+            this.button4.Location = new System.Drawing.Point(1068, 35);
+            this.button4.Name = "button4";
+            this.button4.Size = new System.Drawing.Size(160, 88);
+            this.button4.TabIndex = 10;
+            this.button4.Text = "START";
+            this.button4.UseVisualStyleBackColor = false;
+            this.button4.Click += new System.EventHandler(this.button4_Click);
+            // 
             // Form2
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1257, 682);
+            this.Controls.Add(this.button4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.button3);
@@ -299,5 +314,6 @@
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Button button4;
     }
 }

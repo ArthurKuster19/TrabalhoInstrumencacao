@@ -20,9 +20,13 @@ namespace Trab2Supervisorios
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
             Bootstrap.Initialize();
+            
+            
+            // Comunicação Opc
+            TitaniumAS.Opc.Client.Bootstrap.Initialize();
 
             Uri url = UrlBuilder.Build("Matrikon.OPC.Simulation.1");
-
+            //
             using (var server = new OpcDaServer(url))
             {
                 
@@ -60,15 +64,15 @@ namespace Trab2Supervisorios
                 ItemId = "Bucket Brigade.Int4",
                 IsActive = true
             };
-            OpcDaItemDefinition[] definitions = { definition1, definition2 };
-                OpcDaItemResult[] results = group.AddItems(definitions);
+            //OpcDaItemDefinition[] definitions = { definition1, definition2 };
+            //    OpcDaItemResult[] results = group.AddItems(definitions);
 
             // Handle adding results.
-            foreach (OpcDaItemResult result in results)
-            {
-                if (result.Error.Failed)
-                    Console.WriteLine("Error adding items: {0}", result.Error);
-            }
+            //foreach (OpcDaItemResult result in results)
+            //{
+            //    if (result.Error.Failed)
+            //        Console.WriteLine("Error adding items: {0}", result.Error);
+            //}
 
 
 
