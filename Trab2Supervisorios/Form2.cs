@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Drawing;
 using System.Linq;
@@ -8,7 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using log4net;
+using Newtonsoft.Json;
 using TitaniumAS.Opc.Client.Common;
+using static Trab2Supervisorios.Program;
 
 namespace Trab2Supervisorios
 {
@@ -21,6 +24,20 @@ namespace Trab2Supervisorios
         public int contadortotalotransp;
         public int contadorparcialopac;
         public int contadorparcialtransp;
+
+        public static string todasTags = ConfigurationSettings.AppSettings["TAGS"];
+
+        public bool formopcStart;
+        public bool formopcEmergencia;
+        public bool formopcOpaca;
+        public bool formopcTransp;
+
+        public int formopcNopca;
+		public int formopcNtransp;
+
+        public bool formopcErro;
+		public bool formopcReset;
+		public bool formopcOcupada;
         public Form2()
         {
             InitializeComponent();
@@ -150,9 +167,67 @@ namespace Trab2Supervisorios
 
         private void button4_Click(object sender, EventArgs e)
         {
-            //int existe = int.Parse(textBox6.Text) ;
-         
+
             //ProcessaPeça();
+
+
+            //Ler Variaveis e Atribuir Valor padrão de acordo com o Xml
+        
+            List<ListCofingPadrao> list = JsonConvert.DeserializeObject<List<ListCofingPadrao>>(todasTags);
+
+            System.Configuration.Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+            foreach (var item in list)
+            {
+                
+                if(item.tag == "opcStart")
+                {
+                    formopcStart = bool.Parse(item.valor);
+                }
+                if (item.tag == "opcEmergencia")
+                {
+                    formopcEmergencia = bool.Parse(item.valor);
+                }
+                if (item.tag == "opcOpaca")
+                {
+                    formopcOpaca = bool.Parse(item.valor);
+                }
+                if (item.tag == "opcNopac")
+                {
+                    formopcNopca = Int16.Parse(item.valor);
+                }
+                if (item.tag == "opcTransp")
+                {
+                    formopcTransp = bool.Parse(item.valor);
+                }
+                if (item.tag == "opcNtransp")
+                {
+                    formopcNtransp = Int16.Parse(item.valor);
+                }
+                if (item.tag == "opcErro")
+                {
+                    formopcErro = bool.Parse(item.valor);
+                }
+                if (item.tag == "opcReset")
+                {
+                    formopcReset = bool.Parse(item.valor);
+                }
+                if (item.tag == "opcOcupada")
+                {
+                    formopcOcupada = bool.Parse(item.valor);
+                }
+            }
+
+            //formopcStart = bool.Parse(configuration.AppSettings.Settings["opcStart"].value);
+            //formopcEmergencia = bool.Parse(configuration.AppSettings.Settings["opcEmergencia"].Value);
+            //formopcOpaca = bool.Parse(configuration.AppSettings.Settings["opcOpaca"].Value);
+            //formopcNopca = Int16.Parse(configuration.AppSettings.Settings["opcNopac"].Value);
+            //formopcTransp = bool.Parse(configuration.AppSettings.Settings["opcTransp"].Value);
+            //formopcNtransp = Int16.Parse(configuration.AppSettings.Settings["opcNtransp"].Value);
+            //formopcErro = bool.Parse(configuration.AppSettings.Settings["opcErro"].Value);
+            //formopcReset = bool.Parse(configuration.AppSettings.Settings["opcReset"].Value);
+            //formopcOcupada = bool.Parse(configuration.AppSettings.Settings["opcOcupada"].Value);
+
+
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
