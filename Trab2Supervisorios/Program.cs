@@ -15,17 +15,13 @@ namespace Trab2Supervisorios
     internal static class Program
     {
 
-
-
-        [STAThread]
+        //[STAThread]
         static void Main()
         {
             TitaniumAS.Opc.Client.Bootstrap.Initialize();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
-            Bootstrap.Initialize();
-            // Comunicação Opc
            
+            // Comunicação Opc
+
             Uri url = UrlBuilder.Build("ArthurServerOpc.Grupo1");// ServerOPC
 
 
@@ -62,7 +58,14 @@ namespace Trab2Supervisorios
                 //BrowseChildren(browser);
 
             }
+
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new Form1());
+            Bootstrap.Initialize();
         }
+
+
+           
 
         //classe configura Xml
         class MyXLMHandler
@@ -92,26 +95,26 @@ namespace Trab2Supervisorios
         }
         //
 
-        static void BrowseChildren(IOpcDaBrowser browser, string itemId = null, int indent = 0)
-            {
-               
-                OpcDaBrowseElement[] elements = browser.GetElements(itemId);
+        //static void BrowseChildren(IOpcDaBrowser browser, string itemId = null, int indent = 0)
+        //    {
 
-              
-                foreach (OpcDaBrowseElement element in elements)
-                {
-                    
-                    Console.Write(new String(' ', indent));
-                    Console.WriteLine(element);
+        //        OpcDaBrowseElement[] elements = browser.GetElements(itemId);
 
-                    if (!element.HasChildren)
-                        continue;
 
-                  
-                    BrowseChildren(browser, element.ItemId, indent + 2);
-                }
-            }
+        //        foreach (OpcDaBrowseElement element in elements)
+        //        {
 
-        }
+        //            Console.Write(new String(' ', indent));
+        //            Console.WriteLine(element);
+
+        //            if (!element.HasChildren)
+        //                continue;
+
+
+        //            //BrowseChildren(browser, element.ItemId, indent + 2);
+        //        }
+        //    }
+
+        //}
     }
-
+}

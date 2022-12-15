@@ -6,11 +6,13 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using log4net;
 using Newtonsoft.Json;
 using TitaniumAS.Opc.Client.Common;
+using TitaniumAS.Opc.Client.Da;
 using static Trab2Supervisorios.Program;
 
 namespace Trab2Supervisorios
@@ -33,38 +35,38 @@ namespace Trab2Supervisorios
         public bool formopcTransp;
 
         public int formopcNopca;
-		public int formopcNtransp;
+        public int formopcNtransp;
 
         public bool formopcErro;
-		public bool formopcReset;
-		public bool formopcOcupada;
+        public bool formopcReset;
+        public bool formopcOcupada;
         public Form2()
         {
             InitializeComponent();
-            
+
 
         }
 
         private void Form2_Load(object sender, EventArgs e)
         {
-            
+
         }
         public void ProcessaPeça(int entrada, int tipo)
         {
-            int[] separator = new int [1];
-            int[] contadorTipo = new int [1];
-            int[] contadorQtd = new int [1];
+            int[] separator = new int[1];
+            int[] contadorTipo = new int[1];
+            int[] contadorQtd = new int[1];
 
             separator[0] = entrada;
             separator[1] = tipo;
-           
-            
 
-            if (separator [0] == 1) 
+
+
+            if (separator[0] == 1)
             {
                 log.Info("PEÇA OPACA");
                 richTextBox1.Text = richTextBox1.Text + "\n" + ">>PEÇA OPACA";
-                contadorTipo [0] = contadorTipo[0] + 1;
+                contadorTipo[0] = contadorTipo[0] + 1;
                 contadorparcialopac = contadorTipo[0];
                 contadortotalopac = contadorTipo[0];
                 textBox1.Text = contadorparcialopac.ToString();
@@ -102,7 +104,7 @@ namespace Trab2Supervisorios
 
         private void button1_Click(object sender, EventArgs e)
         {
-             
+
 
         }
 
@@ -126,7 +128,7 @@ namespace Trab2Supervisorios
 
         }
 
-       
+
 
         private void label5_Click(object sender, EventArgs e)
         {
@@ -143,7 +145,7 @@ namespace Trab2Supervisorios
 
         }
 
-        private void button2_Click_1(object sender, EventArgs e )
+        private void button2_Click_1(object sender, EventArgs e)
         {
             log.Info("CONTADOR PARCIAL LIMPO");
             richTextBox1.Text = richTextBox1.Text + "\n" + ">>CONTADOR PARCIAL LIMPO";
@@ -157,7 +159,7 @@ namespace Trab2Supervisorios
         {
             log.Info("PARADA DE EMERGENCIA");
             richTextBox1.Text = richTextBox1.Text + "\n" + ">>PARADA DE EMERGENCIA";
-            
+
         }
 
         private void button3_Click_1(object sender, EventArgs e)
@@ -168,64 +170,95 @@ namespace Trab2Supervisorios
         private void button4_Click(object sender, EventArgs e)
         {
 
-          //  TitaniumAS.Opc.Client.Bootstrap.Initialize();
-
-            Uri url = UrlBuilder.Build("ArthurServerOpc"); // ServerOPC
-
-            //ProcessaPeça();
+            //  TitaniumAS.Opc.Client.Bootstrap.Initialize();
 
 
-            //Ler Variaveis e Atribuir Valor padrão de acordo com o Xml
+            Uri url = UrlBuilder.Build("ArthurServerOpc.Grupo1");// ServerOPC
 
-            List<ListCofingPadrao> list = JsonConvert.DeserializeObject<List<ListCofingPadrao>>(todasTags);
 
-            System.Configuration.Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
-            foreach (var item in list)
+            using (var server = new OpcDaServer(url))
             {
-                
-                if(item.tag == "opcStart")
+                server.Connect();
+
+                OpcDaGroup group = server.AddGroup("MyGroup");
+                group.IsActive = true;
+
+                var itemBool = new OpcDaItemDefinition
                 {
-                    formopcStart = bool.Parse(item.valor);
+                    ItemId = "Random.Boolean",
+                    IsActive = true
+                };
+
+                OpcDaItemDefinition[] opcDaItems = { itemBool };
+                OpcDaItemResult[] results = group.AddItems(opcDaItems);
+
+                foreach (OpcDaItemResult result in results)
+                {
+                    if (result.Error.Failed)
+                        Console.WriteLine("Error adding items: {0}", result.Error);
                 }
-                if (item.tag == "opcEmergencia")
+
+                while (true)
                 {
-                    formopcEmergencia = bool.Parse(item.valor);
+                    OpcDaItemValue[] values = group.Read(group.Items, OpcDaDataSource.Device);
+                    Console.WriteLine("Value is {0}", Convert.ToString(values[0].Value));
+                    Thread.Sleep(3000);
                 }
-                if (item.tag == "opcOpaca")
+
+
+                //ProcessaPeça();
+
+
+                //Ler Variaveis e Atribuir Valor padrão de acordo com o Xml
+
+                List<ListCofingPadrao> list = JsonConvert.DeserializeObject<List<ListCofingPadrao>>(todasTags);
+
+                System.Configuration.Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+                foreach (var item in list)
                 {
-                    formopcOpaca = bool.Parse(item.valor);
-                }
-                if (item.tag == "opcNopac")
-                {
-                    formopcNopca = Int16.Parse(item.valor);
-                }
-                if (item.tag == "opcTransp")
-                {
-                    formopcTransp = bool.Parse(item.valor);
-                }
-                if (item.tag == "opcNtransp")
-                {
-                    formopcNtransp = Int16.Parse(item.valor);
-                }
-                if (item.tag == "opcErro")
-                {
-                    formopcErro = bool.Parse(item.valor);
-                }
-                if (item.tag == "opcReset")
-                {
-                    formopcReset = bool.Parse(item.valor);
-                }
-                if (item.tag == "opcOcupada")
-                {
-                    formopcOcupada = bool.Parse(item.valor);
+
+                    if (item.tag == "opcStart")
+                    {
+                        formopcStart = bool.Parse(item.valor);
+                    }
+                    if (item.tag == "opcEmergencia")
+                    {
+                        formopcEmergencia = bool.Parse(item.valor);
+                    }
+                    if (item.tag == "opcOpaca")
+                    {
+                        formopcOpaca = bool.Parse(item.valor);
+                    }
+                    if (item.tag == "opcNopac")
+                    {
+                        formopcNopca = Int16.Parse(item.valor);
+                    }
+                    if (item.tag == "opcTransp")
+                    {
+                        formopcTransp = bool.Parse(item.valor);
+                    }
+                    if (item.tag == "opcNtransp")
+                    {
+                        formopcNtransp = Int16.Parse(item.valor);
+                    }
+                    if (item.tag == "opcErro")
+                    {
+                        formopcErro = bool.Parse(item.valor);
+                    }
+                    if (item.tag == "opcReset")
+                    {
+                        formopcReset = bool.Parse(item.valor);
+                    }
+                    if (item.tag == "opcOcupada")
+                    {
+                        formopcOcupada = bool.Parse(item.valor);
+                    }
                 }
             }
-        }
 
-        private void textBox5_TextChanged(object sender, EventArgs e)
-        {
 
         }
     }
-    }
+}
+    
 
