@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
@@ -14,49 +15,53 @@ namespace Trab2Supervisorios
     internal static class Program
     {
 
+
+
         [STAThread]
         static void Main()
         {
-
+            TitaniumAS.Opc.Client.Bootstrap.Initialize();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());
             Bootstrap.Initialize();
-
-            //Classificar  
-
-
-
-            // Carregando Xml *Vai mudar
-
-            MyXLMHandler myXLM = new MyXLMHandler();
-            string msg = "Mensagem a ser impressa no console.";
-
-            string font_type = myXLM.readNode("fonte");
-            string msg_type = myXLM.readNode("tipo_msg");
-
-            if (font_type == "caixa_alta")
-            {
-                msg = msg.ToUpper();
-            }
-
-            msg = msg_type + " - " + msg;
-
-            Console.WriteLine(msg);
-            Console.ReadKey();
-
-
             // Comunicação Opc
-            TitaniumAS.Opc.Client.Bootstrap.Initialize();
+           
+            Uri url = UrlBuilder.Build("ArthurServerOpc.Grupo1");// ServerOPC
 
-            Uri url = UrlBuilder.Build("Matrikon.OPC.Simulation.1");// ServerOPC
-            //
+
             using (var server = new OpcDaServer(url))
             {
-
                 server.Connect();
 
-            }
+                OpcDaGroup group = server.AddGroup("MyGroup");
+                group.IsActive = true;
 
+                var itemBool = new OpcDaItemDefinition
+                {
+                    ItemId = "Random.Boolean",
+                    IsActive = true
+                };
+
+                OpcDaItemDefinition[] opcDaItems = { itemBool };
+                OpcDaItemResult[] results = group.AddItems(opcDaItems);
+
+                foreach (OpcDaItemResult result in results)
+                {
+                    if (result.Error.Failed)
+                        Console.WriteLine("Error adding items: {0}", result.Error);
+                }
+
+                while (true)
+                {
+                    OpcDaItemValue[] values = group.Read(group.Items, OpcDaDataSource.Device);
+                    Console.WriteLine("Value is {0}", Convert.ToString(values[0].Value));
+                    Thread.Sleep(3000);
+                }
+
+                //var browser = new OpcDaBrowserAuto(server);
+                //BrowseChildren(browser);
+
+            }
         }
 
         //classe configura Xml
@@ -85,6 +90,7 @@ namespace Trab2Supervisorios
             public string valor { get; set; }
             public string offset { get; set; }
         }
+        //
 
         static void BrowseChildren(IOpcDaBrowser browser, string itemId = null, int indent = 0)
             {
@@ -105,27 +111,6 @@ namespace Trab2Supervisorios
                     BrowseChildren(browser, element.ItemId, indent + 2);
                 }
             }
-
-
-
-
-
-
-
-        //*REDEFINIR MODO DE CONFIGURAÇÃO DEPOIS
-
-
-            //var definition1 = new OpcDaItemDefinition
-            //{
-            //    ItemId = "Random.Int2",
-            //    IsActive = true
-            //};
-            //var definition2 = new OpcDaItemDefinition
-            //{
-            //    ItemId = "Bucket Brigade.Int4",
-            //    IsActive = true
-            //};
-        
 
         }
     }

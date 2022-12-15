@@ -17,8 +17,8 @@ namespace Trab2Supervisorios
 {
     public partial class Form2 : Form
     {
+        private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static readonly ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public int contadortotal;
         public int contadortotalopac;
         public int contadortotalotransp;
@@ -168,11 +168,15 @@ namespace Trab2Supervisorios
         private void button4_Click(object sender, EventArgs e)
         {
 
+          //  TitaniumAS.Opc.Client.Bootstrap.Initialize();
+
+            Uri url = UrlBuilder.Build("ArthurServerOpc"); // ServerOPC
+
             //ProcessaPeça();
 
 
             //Ler Variaveis e Atribuir Valor padrão de acordo com o Xml
-        
+
             List<ListCofingPadrao> list = JsonConvert.DeserializeObject<List<ListCofingPadrao>>(todasTags);
 
             System.Configuration.Configuration configuration = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
@@ -216,18 +220,6 @@ namespace Trab2Supervisorios
                     formopcOcupada = bool.Parse(item.valor);
                 }
             }
-
-            //formopcStart = bool.Parse(configuration.AppSettings.Settings["opcStart"].value);
-            //formopcEmergencia = bool.Parse(configuration.AppSettings.Settings["opcEmergencia"].Value);
-            //formopcOpaca = bool.Parse(configuration.AppSettings.Settings["opcOpaca"].Value);
-            //formopcNopca = Int16.Parse(configuration.AppSettings.Settings["opcNopac"].Value);
-            //formopcTransp = bool.Parse(configuration.AppSettings.Settings["opcTransp"].Value);
-            //formopcNtransp = Int16.Parse(configuration.AppSettings.Settings["opcNtransp"].Value);
-            //formopcErro = bool.Parse(configuration.AppSettings.Settings["opcErro"].Value);
-            //formopcReset = bool.Parse(configuration.AppSettings.Settings["opcReset"].Value);
-            //formopcOcupada = bool.Parse(configuration.AppSettings.Settings["opcOcupada"].Value);
-
-
         }
 
         private void textBox5_TextChanged(object sender, EventArgs e)
