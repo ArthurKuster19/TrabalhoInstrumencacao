@@ -45,15 +45,7 @@ namespace Trab2Supervisorios
         public bool formopcReset;
         public bool formopcOcupada;
 
-
-        bool estadoLiga = false;
-        bool estadoEmergencia = false;
-        public int N_Opaque = 0;
-        public int N_Transp = 0;
-        public int N_Opaque_Ant = 0;
-        public int N_Transp_Ant = 0;
-        public int aux_opaque = 0;
-        public int aux_transp = 0;
+        int somador;
         public Form2()
         {
             InitializeComponent();
@@ -70,54 +62,50 @@ namespace Trab2Supervisorios
        private void ProcessaPeça(object sender, EventArgs e)
         {
             OPC_Communication.ReadBlock();
-            int[] separator = new int[1];
-            int[] contadorTipo = new int[1];
-            int[] contadorQtd = new int[1];
-
-            //separator[0] = entrada;
-            //separator[1] = tipo;
-
-
+           
             if (OPC_Communication.Opaque == true)
             {
                 log.Info("PEÇA OPACA");
                 richTextBox1.Invoke((MethodInvoker)delegate {richTextBox1.Text += "\n" + ">>PEÇA OPACA"; });
-                
-                contadortotalopac = OPC_Communication.Number_Opaque + contadortotalopac;
+              
                 textBox1.Invoke((MethodInvoker)delegate { textBox1.Text = OPC_Communication.Number_Opaque.ToString(); });
-                textBox3.Invoke((MethodInvoker)delegate { textBox4.Text = contadortotalopac.ToString(); });
-          
+                
+                if ((contadortotalopac == 0) && (OPC_Communication.Number_Opaque == 1))
+                {
+                    contadortotalopac = 1;
+
+                }
+                if (contadortotalopac < (OPC_Communication.Number_Opaque))
+                {
+                    contadortotalopac = contadortotalopac + 1;
+
+                }
+                textBox4.Invoke((MethodInvoker)delegate { textBox4.Text = contadortotalopac.ToString(); });
+
 
             }
             if (OPC_Communication.Transparent == true)
             {
                 log.Info("PEÇA TRANSPARENTE");
                 richTextBox1.Invoke((MethodInvoker)delegate { richTextBox1.Text += "\n" + ">>PEÇA TRANSPARENTE"; });
-                contadorparcialtransp = contadorparcialtransp + 1 ;
-                contadortotalotransp = contadortotalotransp + 1;
-
+           
                 textBox2.Invoke((MethodInvoker)delegate { textBox2.Text = OPC_Communication.Number_Transparent.ToString(); });
-                textBox4.Invoke((MethodInvoker)delegate { textBox3.Text = contadortotalotransp.ToString(); });
+                
+                if ((contadortotalotransp == 0) && (OPC_Communication.Number_Transparent == 1))
+                {
+                    contadortotalotransp = 1;
 
+                }
+                if (contadortotalotransp < (OPC_Communication.Number_Transparent))
+                {
+                    contadortotalotransp = contadortotalotransp + 1;
+
+                }
+                textBox4.Invoke((MethodInvoker)delegate { textBox3.Text = contadortotalotransp.ToString(); });
             }
-            int somador = OPC_Communication.Number_Transparent + OPC_Communication.Number_Opaque;
+            somador = OPC_Communication.Number_Transparent + OPC_Communication.Number_Opaque;
             textBox6.Invoke((MethodInvoker)delegate { textBox6.Text = somador.ToString(); });
 
-            //if (separator[1] == 1)
-            //{
-            //    log.Info("PECA ENTRANDO");
-            //    richTextBox1.Text = richTextBox1.Text + "\n" + ">>PEÇA ENTRANDO";
-            //    contadorQtd[0] = contadorQtd[0] + 1;
-
-            //}
-            //if (separator[1] == 2)
-            //{
-            //    log.Info("PEÇA SAINDO");
-            //    richTextBox1.Text = richTextBox1.Text + "\n" + ">>PEÇA SAINDO";
-            //    contadorQtd[1] = contadorQtd[1] + 1;
-            //    contadortotal = contadorQtd[1];
-
-            //}
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -165,10 +153,14 @@ namespace Trab2Supervisorios
 
         private void button2_Click_1(object sender, EventArgs e)
         {
+            OPC_Communication.WriteBlock();
+               OPC_Communication.Reset = true;
+                   OPC_Communication.Number_Opaque =0;
+                   OPC_Communication.Number_Transparent =0;
+
             log.Info("CONTADOR PARCIAL LIMPO");
-            richTextBox1.Text = richTextBox1.Text + "\n" + ">>CONTADOR PARCIAL LIMPO";
-            contadorparcialtransp = 0;
-            contadorparcialopac = 0;
+            richTextBox1.Invoke((MethodInvoker)delegate { richTextBox1.Text += "\n" + ">>CONTADOR PARCIAL LIMPO"; });
+           
             textBox1.Text = contadorparcialopac.ToString();
             textBox2.Text = contadorparcialtransp.ToString();
         }
@@ -176,7 +168,8 @@ namespace Trab2Supervisorios
         private void button1_Click_2(object sender, EventArgs e)
         {
             log.Info("PARADA DE EMERGENCIA");
-            richTextBox1.Text = richTextBox1.Text + "\n" + ">>PARADA DE EMERGENCIA";
+            richTextBox1.Invoke((MethodInvoker)delegate { richTextBox1.Text += "\n" + ">>PARADA DE EMERGENCIA"; });
+           
 
         }
 
@@ -187,69 +180,26 @@ namespace Trab2Supervisorios
 
         private void button4_Click(object sender, EventArgs e)
         {
+            bool estado = OPC_Communication.Start;
+                 switch (estado)
+                {
+                case false:
+                    OPC_Communication.Start = true;
+                    OPC_Communication.WriteBlock();
+                    log.Info("CONTAGEM INICADA");
+                    richTextBox1.Invoke((MethodInvoker)delegate { richTextBox1.Text += "\n" + ">>CONTAGEM INICADA"; });
+                    button4.BackColor = Color.DarkRed;
 
-           
+                    break;
+                case true:
+                    OPC_Communication.Start = false;
+                    OPC_Communication.WriteBlock();
+                    log.Info("CONTAGEM PAUSADA");
+                    richTextBox1.Invoke((MethodInvoker)delegate { richTextBox1.Text += "\n" + ">>CONTAGEM PAUSADA"; });
+                    button4.BackColor = Color.DarkGreen;
+                    break;
 
-            if (estadoLiga == false)
-            {
-                OPC_Communication.Start = true;
-                OPC_Communication.WriteBlock();
-                estadoLiga = true;
-                log.Info("Esteira Ligada.");
-            }
-            else
-            {
-                OPC_Communication.Start = false;
-                OPC_Communication.WriteBlock();
-                estadoLiga = false;
-                log.Info("Esteira Desligada.");
-            }
-
-
-
-
-
-            //  TitaniumAS.Opc.Client.Bootstrap.Initialize();
-
-
-            //Uri url = UrlBuilder.Build("ArthurServerOpc.Grupo1");// ServerOPC
-
-
-            //using (var server = new OpcDaServer(url))
-            //{
-            //    server.Connect();
-
-            //    OpcDaGroup group = server.AddGroup("MyGroup");
-            //    group.IsActive = true;
-
-            //    var itemBool = new OpcDaItemDefinition
-            //    {
-            //        ItemId = "Random.Boolean",
-            //        IsActive = true
-            //    };
-
-            //    OpcDaItemDefinition[] opcDaItems = { itemBool };
-            //    OpcDaItemResult[] results = group.AddItems(opcDaItems);
-
-            //    foreach (OpcDaItemResult result in results)
-            //    {
-            //        if (result.Error.Failed)
-            //            Console.WriteLine("Error adding items: {0}", result.Error);
-            //    }
-
-            //    while (true)
-            //    {
-            //        OpcDaItemValue[] values = group.Read(group.Items, OpcDaDataSource.Device);
-            //        Console.WriteLine("Value is {0}", Convert.ToString(values[0].Value));
-            //        Thread.Sleep(3000);
-            //    }
-
-
-            //ProcessaPeça();
-            //List<ListCofingPadrao>
-
-            //Ler Variaveis e Atribuir Valor padrão de acordo com o Xml
-
+                }
 
         }
 

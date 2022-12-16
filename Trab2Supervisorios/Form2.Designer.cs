@@ -224,7 +224,6 @@
             this.textBox6.Name = "textBox6";
             this.textBox6.Size = new System.Drawing.Size(100, 26);
             this.textBox6.TabIndex = 7;
-       
             // 
             // label5
             // 
@@ -240,7 +239,7 @@
             // 
             // button4
             // 
-            this.button4.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.button4.BackColor = System.Drawing.Color.Lime;
             this.button4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button4.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.button4.Location = new System.Drawing.Point(1068, 35);
