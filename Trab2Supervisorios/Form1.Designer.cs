@@ -58,6 +58,7 @@
             this.label1.Cursor = System.Windows.Forms.Cursors.Default;
             this.label1.ForeColor = System.Drawing.SystemColors.ControlText;
             this.label1.Name = "label1";
+            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // label2
             // 
@@ -85,7 +86,6 @@
             resources.ApplyResources(this.pictureBox2, "pictureBox2");
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.TabStop = false;
-        
             // 
             // Form1
             // 
