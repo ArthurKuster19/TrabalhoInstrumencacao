@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.IO.Ports;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -71,19 +72,6 @@ namespace Trab2Supervisorios
 
         }
 
-        private void button2_Click_1(object sender, EventArgs e)
-        {
-            try
-            {
-                serialPort.Open();
-                button2.Enabled = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-
-        }
 
         private void groupBox1_Enter_1(object sender, EventArgs e)
         {
@@ -99,12 +87,15 @@ namespace Trab2Supervisorios
         private void SerialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             string dataString = serialPort.ReadLine();
-            if (double.TryParse(dataString, out double dataValue))
+            var retorno = ExtrairNumeroDecimal(dataString);
+           
+            if (double.TryParse(retorno, out double dataValue))
             {
                 TimeSpan time = DateTime.Now - startTime;
+                var tempoFormatado = time.TotalSeconds.ToString("0.0") + "s";
                 Invoke(new Action(() =>
                 {
-                    chart1.Series["Vazão"].Points.AddXY(time.TotalSeconds, dataValue);
+                    chart1.Series["Vazão"].Points.AddXY(tempoFormatado, dataValue);
                 }));
             }
         }
@@ -113,8 +104,24 @@ namespace Trab2Supervisorios
         {
             if (serialPort.IsOpen)
             {
-                serialPort.WriteLine(textBox3.Text); 
+                serialPort.WriteLine(textBox3.Text);
+                serialPort.DataReceived += SerialPort_DataReceived;
             }
+        }
+
+        private void button1_Click_2(object sender, EventArgs e)
+        {
+            serialPort.Open();
+            button1.Enabled = false;
+        }
+
+        public static string ExtrairNumeroDecimal(string texto)
+        {
+            // Regex para encontrar um número decimal
+            Regex regex = new Regex(@"\d+\.\d+");
+            Match match = regex.Match(texto);
+
+            return match.Success ? match.Value : null;
         }
     }
     }
