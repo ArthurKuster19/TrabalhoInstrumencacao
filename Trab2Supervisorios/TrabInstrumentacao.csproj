@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{5623F319-06AA-4312-B0FE-6CA97BD65875}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>Trab2Supervisorios</RootNamespace>
-    <AssemblyName>Trab2Supervisorios</AssemblyName>
+    <RootNamespace>TrabInstrumentacao</RootNamespace>
+    <AssemblyName>TrabInstrumentacao</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
